@@ -14,7 +14,7 @@ mov al, 0x13 ;modo VGA 320x200 8 bits (256 cores)
 int 0x10
 
 int 0x13        ; Int 13/AH=00h - DISK - RESET DISK SYSTEM
-mov ah, 0x02    ; fazer leitura
+mov ah, 2    ; fazer leitura
 mov al, 32      ; quantidade de setores a ler
 mov ch, 0       ; cilindro 0
 mov dh, 0       ; cabeçote 0
@@ -23,20 +23,21 @@ mov bx, 0x7e00  ; endereço onde gravar os dados lidos
 int 0x13    ; Int 13/AH=02h, DISK - READ SECTOR(S) INTO MEMORY
 
 ;copia pixels (end. 0x8100, ou seja, 0x7e00 + tabela de cores (256*3 bytes), para o end. de vÃ­deo no modo grÃ¡fico 0x13, 0xa000)
-mov ax, 0xa000
-mov es, ax
-mov di, 64000
+mov cx, 0xa000
+mov es, cx
+mov di, 0
 
 copiarImagem:
-    mov si, [bx]
+    mov ax, [bx]
     mov [es:di], ax
     inc bx
-    dec di
-    or di, di
-    jnz copiarImagem
+    inc di
+    cmp di, 16000
+    je fim
+    jmp copiarImagem
 
-    hlt
-
+fim: 
+    jmp fim
 
 times 510 - ($-$$) db 0
 dw 0xaa55
