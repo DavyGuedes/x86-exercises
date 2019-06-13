@@ -1,4 +1,4 @@
-# x86-exercices
+# x86-exercises
 
 Avaliação Final - Arquitetura de Computadores 2019.1
 
